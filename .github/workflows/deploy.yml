@@ -1,0 +1,39 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: "main"
+
+jobs:
+  build_site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install UI dependencies
+        working-directory: ./ui
+        run: bun install
+
+      - name: Build site
+        working-directory: ./ui
+        run: bun build
+
+      - name: Install data dependencies
+        working-directory: ./data
+        run: bun install
+
+      - name: Build data
+        working-directory: ./data
+        run: bun run ./src/main.ts
+
+      - name: Combine data and site
+        run: mv ./data/out/ ./ui/build/api/
+
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "ui/build/"
