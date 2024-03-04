@@ -67,4 +67,5 @@ const f = async () => {
   Bun.write("./out/lastUpdated.json", JSON.stringify(new Date().toISOString()));
 };
 
-f();
+// f();
+console.log(new Date().toISOString());
