@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: "main"
+  schedule:
+    - cron: "0 0 * * 0"
 
 jobs:
   build_site:
@@ -21,7 +23,7 @@ jobs:
       - name: Build site
         working-directory: ./ui
         env:
-          BASE_PATH: '/${{ github.event.repository.name }}'
+          BASE_PATH: "/${{ github.event.repository.name }}"
         run: bun run build
 
       - name: Install data dependencies
@@ -40,7 +42,7 @@ jobs:
         with:
           path: "ui/build/"
 
-   deploy:
+  deploy:
     needs: build_site
     runs-on: ubuntu-latest
 
