@@ -20,7 +20,7 @@ jobs:
 
       - name: Build site
         working-directory: ./ui
-        run: bun build
+        run: bun run build
 
       - name: Install data dependencies
         working-directory: ./data

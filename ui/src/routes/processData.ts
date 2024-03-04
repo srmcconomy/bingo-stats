@@ -5,22 +5,19 @@ import { processEntries } from "./processEntries.js";
 import { processPlayers } from "./processPlayers.js";
 import { processRows } from "./processRows.js";
 
-export const load = async ({ fetch, url: { searchParams } }) => {
-  const [boards, races, entries, lastUpdated] = await Promise.all([
-    fetch("./api/boards.json").then((res) => res.json()) as Promise<
-      Dictionary<Board>
-    >,
-    fetch("./api/races.json").then((res) => res.json()) as Promise<
-      Dictionary<Race>
-    >,
-    fetch("./api/entries.json").then((res) => res.json()) as Promise<
-      Dictionary<Entry>
-    >,
-    fetch("./api/lastUpdated.json").then((res) =>
-      res.json(),
-    ) as Promise<string>,
-  ]);
-
+export const processData = ({
+  boards,
+  races,
+  entries,
+  lastUpdated,
+  searchParams,
+}: {
+  boards: Dictionary<Board>;
+  races: Dictionary<Race>;
+  entries: Dictionary<Entry>;
+  lastUpdated: string;
+  searchParams: URLSearchParams;
+}) => {
   const version = searchParams.get("version") ?? undefined;
   const racer = searchParams.get("racer") ?? undefined;
   const minSampleSize = searchParams.get("minSampleSize") ?? undefined;
