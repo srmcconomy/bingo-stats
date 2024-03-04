@@ -21,7 +21,7 @@
   <div class="title">{title}</div>
   <div
     class="grid"
-    style="grid-template-columns: minmax(max-content, 1fr) repeat({columns.length -
+    style="grid-template-columns: 1fr repeat({columns.length -
       1}, max-content);"
   >
     <div class="header">
@@ -48,7 +48,7 @@
     <div class="title">{title}</div>
     <div
       class="grid modal"
-      style="grid-template-columns: minmax(max-content, 1fr) repeat({columns.length -
+      style="grid-template-columns: 1fr repeat({columns.length -
         1}, max-content);"
     >
       <div class="header">
@@ -80,11 +80,14 @@
   .container {
     background: #333333;
     padding: 4px;
-    min-width: 500px;
+    @media (min-width: 600px) {
+      width: 500px;
+    }
   }
   .grid {
     display: grid;
     margin-bottom: 8px;
+    grid-auto-rows: max-content;
 
     &.modal {
       overflow-y: auto;
@@ -99,6 +102,8 @@
     }
     & > div {
       padding: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

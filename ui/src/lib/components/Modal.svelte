@@ -17,6 +17,7 @@
     transition:fly={{ duration: 200, easing: quadInOut, y: -50 }}
   >
     <slot />
+    <button class="close" on:click={() => dispatch("close")}>&times;</button>
   </div>
 </div>
 
@@ -56,5 +57,40 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    position: relative;
+
+    @media (max-width: 600px) {
+      max-height: unset;
+      height: 100%;
+      width: 100%;
+      padding: 16px 4px;
+      border-radius: 0;
+      box-sizing: border-box;
+    }
+
+    .close {
+      position: absolute;
+      top: 0;
+      right: 8px;
+      color: inherit;
+      background: unset;
+      border: unset;
+      font-size: 48px;
+      font-weight: 200;
+      height: 48px;
+      width: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      cursor: pointer;
+
+      &:hover {
+        color: #ffffffff;
+      }
+      &:active {
+        color: #ffffffff;
+      }
+    }
   }
 </style>

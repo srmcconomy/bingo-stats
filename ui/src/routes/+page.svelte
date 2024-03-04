@@ -10,6 +10,7 @@
   import { onMount } from "svelte";
   import { processData } from "./processData";
   import { loadData } from "./loadData";
+  import Checkbox from "$lib/components/Checkbox.svelte";
 
   let data: ReturnType<typeof processData> | null = null;
   let searchParams: URLSearchParams | null = null;
@@ -76,6 +77,12 @@
           value={data.minSampleSize ?? ""}
           on:change={(e) => updateQueryParams("minSampleSize", e.detail)}
         />
+        <Checkbox
+          label="Use median"
+          checked={data.useMedian}
+          on:change={(e) =>
+            updateQueryParams("useMedian", e.detail ? "true" : undefined)}
+        />
       </div>
       <div class="data">
         <DataList
@@ -125,7 +132,7 @@
               render: (row) => row.goal,
             },
             {
-              header: "Average time",
+              header: data.useMedian ? "Median time" : "Average time",
               render: (row) => formatDuration(row.averageTime),
             },
             {
@@ -143,7 +150,7 @@
               render: (row) => row.goal,
             },
             {
-              header: "Average time",
+              header: data.useMedian ? "Median time" : "Average time",
               render: (row) => formatDuration(row.averageTime),
             },
             {
@@ -183,6 +190,81 @@
             {
               header: "Forfeit rate",
               render: (row) => Math.round(row.forfeitPercent * 100) + "%",
+            },
+            {
+              header: "Sample",
+              render: (row) => `${row.picks}`,
+            },
+          ]}
+        />
+
+        <DataList
+          title="Most popular goal combinations"
+          data={data.goalCombosByPickRateDesc}
+          columns={[
+            {
+              header: "Goals",
+              render: (row) => row.goals.join(" × "),
+            },
+            {
+              header: "Pick rate",
+              render: (row) => Math.round(row.pickPercent * 100) + "%",
+            },
+            {
+              header: "Sample",
+              render: (row) => `${row.appearances}`,
+            },
+          ]}
+        />
+
+        <DataList
+          title="Least popular goal combinations"
+          data={data.goalCombosByPickRateAsc}
+          columns={[
+            {
+              header: "Goals",
+              render: (row) => row.goals.join(" × "),
+            },
+            {
+              header: "Pick rate",
+              render: (row) => Math.round(row.pickPercent * 100) + "%",
+            },
+            {
+              header: "Sample",
+              render: (row) => `${row.appearances}`,
+            },
+          ]}
+        />
+
+        <DataList
+          title="Best goal combinations"
+          data={data.goalCombosByAverageTimeAsc}
+          columns={[
+            {
+              header: "Goals",
+              render: (row) => row.goals.join(" × "),
+            },
+            {
+              header: data.useMedian ? "Median time" : "Average time",
+              render: (row) => formatDuration(row.averageTime),
+            },
+            {
+              header: "Sample",
+              render: (row) => `${row.picks}`,
+            },
+          ]}
+        />
+        <DataList
+          title="Worst goal combinations"
+          data={data.goalCombosByAverageTimeDesc}
+          columns={[
+            {
+              header: "Goals",
+              render: (row) => row.goals.join(" × "),
+            },
+            {
+              header: data.useMedian ? "Median time" : "Average time",
+              render: (row) => formatDuration(row.averageTime),
             },
             {
               header: "Sample",
@@ -268,7 +350,7 @@
               render: (row) => row.row,
             },
             {
-              header: "Average time",
+              header: data.useMedian ? "Median time" : "Average time",
               render: (row) => formatDuration(row.averageTime),
             },
             {
@@ -286,7 +368,7 @@
               render: (row) => row.row,
             },
             {
-              header: "Average time",
+              header: data.useMedian ? "Median time" : "Average time",
               render: (row) => formatDuration(row.averageTime),
             },
             {
@@ -321,7 +403,7 @@
   </main>
 {/if}
 
-<style>
+<style lang="scss">
   main {
     display: flex;
     flex-direction: column;
@@ -333,15 +415,29 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
+
+    @media (max-width: 600px) {
+      padding: 0 4px;
+    }
   }
   .filters {
     display: flex;
     align-items: flex-start;
     gap: 32px;
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 8px;
+    }
   }
   .data {
     display: flex;
     flex-wrap: wrap;
     gap: 32px;
+    @media (max-width: 600px) {
+      flex-wrap: nowrap;
+      flex-direction: column;
+      gap: 16px;
+      align-items: stretch;
+    }
   }
 </style>

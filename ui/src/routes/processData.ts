@@ -2,6 +2,7 @@ import { orderBy } from "$lib/orderBy";
 import type { Board, Dictionary, Entry, Race } from "$lib/types.js";
 import { processBoards } from "./processBoards.js";
 import { processEntries } from "./processEntries.js";
+import { processGoalCombinations } from "./processGoalCombinations.js";
 import { processPlayers } from "./processPlayers.js";
 import { processRows } from "./processRows.js";
 
@@ -21,6 +22,7 @@ export const processData = ({
   const version = searchParams.get("version") ?? undefined;
   const racer = searchParams.get("racer") ?? undefined;
   const minSampleSize = searchParams.get("minSampleSize") ?? undefined;
+  const useMedian = searchParams.get("useMedian") === "true" ? true : false;
 
   const allVersions = [...new Set(Object.values(boards).map((b) => b.version))];
   const allRacers = [...new Set(Object.values(entries).map((b) => b.entrant))];
@@ -33,6 +35,7 @@ export const processData = ({
     filters: {
       version,
       racer,
+      useMedian,
     },
   });
 
@@ -51,6 +54,7 @@ export const processData = ({
     filters: {
       version,
       racer,
+      useMedian,
     },
   });
 
@@ -60,6 +64,17 @@ export const processData = ({
     entries,
     filters: {
       version,
+    },
+  });
+
+  const goalCombinationData = processGoalCombinations({
+    boards,
+    races,
+    entries,
+    filters: {
+      version,
+      racer,
+      useMedian,
     },
   });
 
@@ -90,6 +105,34 @@ export const processData = ({
     ),
     entriesByAverageTimeAsc: orderBy(
       goalEntryData
+        .filter((g) => g.picks >= minSizeNum)
+        .filter((g) => g.averageTime),
+      (g) => -g.averageTime,
+    ),
+    goalCombosByPickRateDesc: orderBy(
+      goalCombinationData.filter((g) => g.picks >= minSizeNum),
+      (g) => g.pickPercent,
+    ),
+    goalCombosByPickRateAsc: orderBy(
+      goalCombinationData.filter((g) => g.picks >= minSizeNum),
+      (g) => -g.pickPercent,
+    ),
+    goalCombosByForfeitRateDesc: orderBy(
+      goalCombinationData.filter((g) => g.picks >= minSizeNum),
+      (g) => g.forfeitPercent,
+    ),
+    goalCombosByForfeitRateAsc: orderBy(
+      goalCombinationData.filter((g) => g.picks >= minSizeNum),
+      (g) => -g.forfeitPercent,
+    ),
+    goalCombosByAverageTimeDesc: orderBy(
+      goalCombinationData
+        .filter((g) => g.picks >= minSizeNum)
+        .filter((g) => g.averageTime),
+      (g) => g.averageTime,
+    ),
+    goalCombosByAverageTimeAsc: orderBy(
+      goalCombinationData
         .filter((g) => g.picks >= minSizeNum)
         .filter((g) => g.averageTime),
       (g) => -g.averageTime,
@@ -136,5 +179,6 @@ export const processData = ({
     minSampleSize,
     allRacers,
     lastUpdated: new Date(lastUpdated),
+    useMedian,
   };
 };

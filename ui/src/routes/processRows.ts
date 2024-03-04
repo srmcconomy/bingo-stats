@@ -1,4 +1,5 @@
 import { average } from "$lib/average";
+import { median } from "$lib/median";
 import { parseDuration } from "$lib/parseDuration";
 import type { Board, Dictionary, Entry, Race } from "$lib/types";
 
@@ -14,6 +15,7 @@ export const processRows = ({
   filters: {
     version?: string;
     racer?: string;
+    useMedian?: boolean;
   };
 }) => {
   let totalEntries = 0;
@@ -55,7 +57,9 @@ export const processRows = ({
   return [...data.entries()].map(([row, rowData]) => ({
     row,
     pickPercent: rowData.picks / totalEntries,
-    averageTime: average(rowData.times),
+    averageTime: filters.useMedian
+      ? median(rowData.times)
+      : average(rowData.times),
     forfeitPercent: rowData.forfeits / rowData.picks,
     picks: rowData.picks,
   }));

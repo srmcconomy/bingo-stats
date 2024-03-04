@@ -4,17 +4,20 @@
 
 <header>
   <nav>
-    <div>
+    <div class="left">
       <span class="title">Bingo Stats</span>
       <span class="subtitle">by prettybigjoe</span>
     </div>
-    <span class="subtitle">
-      last updated: {lastUpdated.toLocaleString()}
-    </span>
+    <div class="right">
+      <span class="subtitle"> last updated: </span>
+      <span class="subtitle">
+        {lastUpdated.toLocaleString()}
+      </span>
+    </div>
   </nav>
 </header>
 
-<style>
+<style lang="scss">
   header {
     height: 40px;
   }
@@ -26,16 +29,40 @@
     background: #222222;
     z-index: 50;
     width: 100%;
-    align-items: baseline;
     justify-content: space-between;
     max-width: 1200px;
+    align-items: baseline;
+
+    @media (max-width: 600px) {
+      padding: 8px 4px;
+      left: 0;
+      right: 0;
+      width: unset;
+    }
   }
 
   .title {
     font-size: 20px;
     font-family: Montserrat;
     color: #f7e279;
-    margin-right: 32px;
+  }
+
+  .left {
+    display: flex;
+    gap: 32px;
+    align-items: baseline;
+    @media (max-width: 500px) {
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+
+  .right {
+    display: flex;
+    gap: 4px;
+    @media (max-width: 500px) {
+      flex-direction: column;
+    }
   }
 
   .subtitle {

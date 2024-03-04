@@ -9,9 +9,6 @@
   export let getLabel: (option: T) => string;
 
   let isOpen = false;
-  $: {
-    console.log(isOpen);
-  }
   const dispatch = createEventDispatcher<{ change: T }>();
 </script>
 

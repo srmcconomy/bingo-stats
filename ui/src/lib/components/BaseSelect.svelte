@@ -72,12 +72,16 @@
     box-shadow:
       0 10px 20px rgba(0, 0, 0, 0.19),
       0 6px 6px rgba(0, 0, 0, 0.23);
+    width: max-content;
 
     button {
       color: inherit;
       border: 0;
       background: unset;
       padding: 8px 16px;
+      @media (max-width: 600px) {
+        padding: 16px;
+      }
       text-align: unset;
       cursor: pointer;
 
