@@ -92,6 +92,7 @@
             {
               header: "Goal",
               render: (row) => row.goal,
+              fill: true,
             },
             {
               header: "Pick rate",
@@ -111,6 +112,7 @@
             {
               header: "Goal",
               render: (row) => row.goal,
+              fill: true,
             },
             {
               header: "Pick rate",
@@ -130,6 +132,7 @@
             {
               header: "Goal",
               render: (row) => row.goal,
+              fill: true,
             },
             {
               header: data.useMedian ? "Median time" : "Average time",
@@ -148,6 +151,7 @@
             {
               header: "Goal",
               render: (row) => row.goal,
+              fill: true,
             },
             {
               header: data.useMedian ? "Median time" : "Average time",
@@ -167,6 +171,7 @@
             {
               header: "Goal",
               render: (row) => row.goal,
+              fill: true,
             },
             {
               header: "Forfeit rate",
@@ -186,6 +191,7 @@
             {
               header: "Goal",
               render: (row) => row.goal,
+              fill: true,
             },
             {
               header: "Forfeit rate",
@@ -203,8 +209,14 @@
           data={data.goalCombosByPickRateDesc}
           columns={[
             {
-              header: "Goals",
-              render: (row) => row.goals.join(" × "),
+              header: "Goal 1",
+              render: (row) => row.goals[0],
+              fill: true,
+            },
+            {
+              header: "Goal 2",
+              render: (row) => row.goals[1],
+              fill: true,
             },
             {
               header: "Pick rate",
@@ -222,8 +234,14 @@
           data={data.goalCombosByPickRateAsc}
           columns={[
             {
-              header: "Goals",
-              render: (row) => row.goals.join(" × "),
+              header: "Goal 1",
+              render: (row) => row.goals[0],
+              fill: true,
+            },
+            {
+              header: "Goal 2",
+              render: (row) => row.goals[1],
+              fill: true,
             },
             {
               header: "Pick rate",
@@ -241,8 +259,14 @@
           data={data.goalCombosByAverageTimeAsc}
           columns={[
             {
-              header: "Goals",
-              render: (row) => row.goals.join(" × "),
+              header: "Goal 1",
+              render: (row) => row.goals[0],
+              fill: true,
+            },
+            {
+              header: "Goal 2",
+              render: (row) => row.goals[1],
+              fill: true,
             },
             {
               header: data.useMedian ? "Median time" : "Average time",
@@ -259,8 +283,14 @@
           data={data.goalCombosByAverageTimeDesc}
           columns={[
             {
-              header: "Goals",
-              render: (row) => row.goals.join(" × "),
+              header: "Goal 1",
+              render: (row) => row.goals[0],
+              fill: true,
+            },
+            {
+              header: "Goal 2",
+              render: (row) => row.goals[1],
+              fill: true,
             },
             {
               header: data.useMedian ? "Median time" : "Average time",
@@ -281,6 +311,7 @@
               {
                 header: "Goal",
                 render: (row) => row.goal,
+                fill: true,
               },
               {
                 header: "Appearance rate",
@@ -296,6 +327,7 @@
               {
                 header: "Goal",
                 render: (row) => row.goal,
+                fill: true,
               },
               {
                 header: "Appearance rate",
@@ -312,6 +344,7 @@
             {
               header: "Row",
               render: (row) => row.row,
+              fill: true,
             },
             {
               header: "Pick rate",
@@ -330,6 +363,7 @@
             {
               header: "Row",
               render: (row) => row.row,
+              fill: true,
             },
             {
               header: "Pick rate",
@@ -348,6 +382,7 @@
             {
               header: "Row",
               render: (row) => row.row,
+              fill: true,
             },
             {
               header: data.useMedian ? "Median time" : "Average time",
@@ -366,6 +401,7 @@
             {
               header: "Row",
               render: (row) => row.row,
+              fill: true,
             },
             {
               header: data.useMedian ? "Median time" : "Average time",
@@ -386,6 +422,7 @@
               {
                 header: "Racer",
                 render: (row) => row.entrant.split("#")[0],
+                fill: true,
               },
               {
                 header: "Blank rate",
@@ -415,6 +452,7 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
+    padding: 0 16px;
 
     @media (max-width: 600px) {
       padding: 0 4px;
@@ -424,7 +462,7 @@
     display: flex;
     align-items: flex-start;
     gap: 32px;
-    @media (max-width: 600px) {
+    @media (max-width: 800px) {
       flex-direction: column;
       gap: 8px;
     }
@@ -433,11 +471,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 32px;
-    @media (max-width: 600px) {
-      flex-wrap: nowrap;
-      flex-direction: column;
-      gap: 16px;
-      align-items: stretch;
+    @media (min-width: 1032px) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
     }
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
   }
 </style>

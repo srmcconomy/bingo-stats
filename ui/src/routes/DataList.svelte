@@ -6,6 +6,7 @@
   export let columns: {
     header: string;
     render: (row: T) => string;
+    fill?: boolean;
   }[];
 
   let isModalOpen = false;
@@ -21,8 +22,9 @@
   <div class="title">{title}</div>
   <div
     class="grid"
-    style="grid-template-columns: 1fr repeat({columns.length -
-      1}, max-content);"
+    style="grid-template-columns: {columns
+      .map((c) => (c.fill ? '1fr' : 'max-content'))
+      .join(' ')};"
   >
     <div class="header">
       {#each columns as { header }}
@@ -80,9 +82,6 @@
   .container {
     background: #333333;
     padding: 4px;
-    @media (min-width: 600px) {
-      width: 500px;
-    }
   }
   .grid {
     display: grid;

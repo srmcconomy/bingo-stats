@@ -19,16 +19,18 @@
 
 <style lang="scss">
   header {
-    height: 40px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: #222222;
+    z-index: 50;
   }
   nav {
     display: flex;
-    padding: 8px 0;
-    position: fixed;
+    padding: 8px 16px;
     top: 0;
-    background: #222222;
-    z-index: 50;
     width: 100%;
+    box-sizing: border-box;
     justify-content: space-between;
     max-width: 1200px;
     align-items: baseline;
@@ -51,7 +53,7 @@
     display: flex;
     gap: 32px;
     align-items: baseline;
-    @media (max-width: 500px) {
+    @media (max-width: 600px) {
       flex-direction: column;
       gap: 4px;
     }
@@ -60,7 +62,7 @@
   .right {
     display: flex;
     gap: 4px;
-    @media (max-width: 500px) {
+    @media (max-width: 600px) {
       flex-direction: column;
     }
   }
