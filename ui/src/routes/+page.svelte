@@ -11,6 +11,7 @@
   import { processData } from "./processData";
   import { loadData } from "./loadData";
   import Checkbox from "$lib/components/Checkbox.svelte";
+  import { fade } from "svelte/transition";
 
   let data: ReturnType<typeof processData> | null = null;
   let searchParams: URLSearchParams | null = null;
@@ -48,7 +49,23 @@
 </svelte:head>
 
 {#if !data}
-  <div>Loading...</div>
+  <div class="load" out:fade>
+    <svg
+      width="20vmin"
+      height="20vmin"
+      viewBox="0 0 512 443.392"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="#FFFFFF66"
+        d="
+				M 0 443.392 L 256 443.392 L 128 221.696 Z
+				M 256 443.392 L 512 443.392 L 384 221.696 Z
+				M 128 221.696 L 384 221.696 L 256 0 Z
+				"
+      /></svg
+    >
+  </div>
 {:else}
   <Header lastUpdated={data.lastUpdated} />
 
@@ -441,6 +458,29 @@
 {/if}
 
 <style lang="scss">
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .load {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #222222;
+    & > svg {
+      transform-origin: 50% 66.666%;
+      animation: spin 2s linear infinite;
+    }
+  }
   main {
     display: flex;
     flex-direction: column;
