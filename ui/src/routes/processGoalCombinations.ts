@@ -59,7 +59,7 @@ export const processGoalCombinations = ({
           const row = getRow(board.goals, rowName);
           for (const goal1 of row) {
             for (const goal2 of row) {
-              if (goal1 === goal2) {
+              if (goal1.localeCompare(goal2) >= 0) {
                 continue;
               }
               const sortedGoals = [goal1, goal2].sort();

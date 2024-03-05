@@ -50,8 +50,9 @@
     <div class="title">{title}</div>
     <div
       class="grid modal"
-      style="grid-template-columns: 1fr repeat({columns.length -
-        1}, max-content);"
+      style="grid-template-columns: {columns
+        .map((c) => (c.fill ? '1fr' : 'max-content'))
+        .join(' ')};"
     >
       <div class="header">
         {#each columns as { header }}
