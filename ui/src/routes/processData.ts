@@ -6,6 +6,14 @@ import { processGoalCombinations } from "./processGoalCombinations.js";
 import { processPlayers } from "./processPlayers.js";
 import { processRows } from "./processRows.js";
 
+const getVersionValue = (version: string) => {
+  const values = version.split(".").map(Number);
+  return values.reduce(
+    (acc, value, index) => acc + value * 100 ** (2 - index),
+    0,
+  );
+};
+
 export const processData = ({
   boards,
   races,
@@ -27,7 +35,7 @@ export const processData = ({
 
   const allVersions = [...new Set(Object.values(boards).map((b) => b.version))];
   const allRacers = [...new Set(Object.values(entries).map((b) => b.entrant))];
-  allVersions.sort((a, b) => b.localeCompare(a));
+  allVersions.sort((a, b) => getVersionValue(b) - getVersionValue(a));
 
   const goalEntryData = processEntries({
     boards,

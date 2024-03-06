@@ -61,7 +61,7 @@ const fetchGenerator = memoize(
       `${await response.text()}; return typeof BingoLibrary === 'undefined' ? ootBingoGenerator : BingoLibrary.ootBingoGenerator;`
     )() as (
       goalList: { name: string }[],
-      options: { seed: number; mode: string; lang: string }
+      options: { seed: string; mode: string; lang: string }
     ) => { name: string }[];
   },
   (version) => version
@@ -85,7 +85,7 @@ export const generateBoard = async (version: string, seed: number) => {
   ]);
 
   const board = generator(goalList, {
-    seed,
+    seed: `${seed}`,
     mode: "normal",
     lang: "name",
   })
