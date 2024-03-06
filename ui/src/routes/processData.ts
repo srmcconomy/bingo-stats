@@ -20,6 +20,7 @@ export const processData = ({
   searchParams: URLSearchParams;
 }) => {
   const version = searchParams.get("version") ?? undefined;
+  const gameMode = searchParams.get("gameMode") ?? undefined;
   const racer = searchParams.get("racer") ?? undefined;
   const minSampleSize = searchParams.get("minSampleSize") ?? undefined;
   const useMedian = searchParams.get("useMedian") === "true" ? true : false;
@@ -34,6 +35,7 @@ export const processData = ({
     entries,
     filters: {
       version,
+      gameMode,
       racer,
       useMedian,
     },
@@ -44,6 +46,7 @@ export const processData = ({
     races,
     filters: {
       version,
+      gameMode,
     },
   });
 
@@ -53,6 +56,7 @@ export const processData = ({
     entries,
     filters: {
       version,
+      gameMode,
       racer,
       useMedian,
     },
@@ -64,6 +68,7 @@ export const processData = ({
     entries,
     filters: {
       version,
+      gameMode,
     },
   });
 
@@ -73,6 +78,7 @@ export const processData = ({
     entries,
     filters: {
       version,
+      gameMode,
       racer,
       useMedian,
     },
@@ -175,6 +181,7 @@ export const processData = ({
     ),
     allVersions,
     version,
+    gameMode,
     racer,
     minSampleSize,
     allRacers,

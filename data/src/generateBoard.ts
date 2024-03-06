@@ -58,7 +58,7 @@ const fetchGenerator = memoize(
       `https://raw.githubusercontent.com/ootbingo/bingo/develop/${path}/generator.js`
     );
     return new Function(
-      `${await response.text()}; return BingoLibrary.ootBingoGenerator;`
+      `${await response.text()}; return typeof BingoLibrary === 'undefined' ? ootBingoGenerator : BingoLibrary.ootBingoGenerator;`
     )() as (
       goalList: { name: string }[],
       options: { seed: number; mode: string; lang: string }

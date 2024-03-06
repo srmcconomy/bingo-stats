@@ -1,8 +1,37 @@
 import { api } from "./racetimeApi";
 
+const parseInfo = (info: string) => {
+  const { urlStr, gameMode } = info.startsWith("Anti-Bingo ")
+    ? { urlStr: info.split(" ")[1], gameMode: "anti-bingo" as const }
+    : { urlStr: info, gameMode: "bingo" as const };
+
+  const url = new URL(urlStr);
+  const versionRegex = /^\/bingo\/v(.+)\/bingo.html$/;
+  const versionMatch = versionRegex.exec(url.pathname);
+  const version = versionMatch
+    ? versionMatch[1]
+    : url.searchParams.get("version");
+  const seed = url.searchParams.get("seed");
+  if (
+    version &&
+    seed &&
+    url.searchParams.get("mode") === "normal" &&
+    url.host === "ootbingo.github.io" &&
+    (versionMatch || url.pathname === "/bingo/bingo.html")
+  ) {
+    return { version, seed: +seed, gameMode };
+  }
+  return null;
+};
+
 export const allBingoRaces = async (fetchAfter: number = 0) => {
   let page = 1;
-  const fullList: api.Race[] = [];
+  const fullList: {
+    version: string;
+    seed: number;
+    gameMode: "bingo" | "anti-bingo";
+    race: api.Race;
+  }[] = [];
   outer: for (;;) {
     console.log("fetching page", page);
     const { races, num_pages } = await api.races(page);
@@ -11,14 +40,12 @@ export const allBingoRaces = async (fetchAfter: number = 0) => {
         break outer;
       }
       try {
-        const url = new URL(race.info);
-        if (
-          url.host === "ootbingo.github.io" &&
-          url.pathname === "/bingo/bingo.html" &&
-          url.searchParams.has("seed") &&
-          url.searchParams.get("mode") === "normal"
-        ) {
-          fullList.push(race);
+        const data = parseInfo(race.info);
+        if (data) {
+          fullList.push({
+            ...data,
+            race,
+          });
         }
       } catch {}
     }

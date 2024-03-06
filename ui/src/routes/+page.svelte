@@ -80,6 +80,14 @@
           getLabel={(v) => v ?? "All versions"}
           getValue={(v) => v ?? "all"}
         />
+        <Select
+          label="Game Mode"
+          value={data.gameMode}
+          on:change={(e) => updateQueryParams("gameMode", e.detail)}
+          options={[undefined, "bingo", "anti-bingo"]}
+          getLabel={(v) => v ?? "All"}
+          getValue={(v) => v ?? "all"}
+        />
         <SelectInput
           label="Racer"
           value={data.racer}

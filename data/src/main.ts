@@ -1,4 +1,5 @@
 import { allBingoRaces } from "./allRaces";
+import { CURRENT_VERSION } from "./currentVersion";
 import { fetchExistingData } from "./fetchExistingData";
 import { generateBoard } from "./generateBoard";
 
@@ -34,11 +35,8 @@ const f = async () => {
     }
   });
   const races = await allBingoRaces(mostRecentTime);
-  for (const race of races) {
+  for (const { seed, version, gameMode, race } of races) {
     try {
-      const url = new URL(race.info);
-      const seed = +url.searchParams.get("seed")!;
-      const version = url.searchParams.get("version")!;
       const board = await generateBoard(version, seed);
       boardStore[`${version}:${seed}`] = {
         version,
@@ -47,6 +45,7 @@ const f = async () => {
       raceStore[race.url] = {
         timestamp: race.opened_at,
         board: `${version}:${seed}`,
+        gameMode,
         entrants: race.entrants.map((e) => e.user.full_name),
       };
       for (const entrant of race.entrants) {
@@ -59,12 +58,15 @@ const f = async () => {
           row: entrant.comment ? parseRow(entrant.comment) : null,
         };
       }
-    } catch {}
+    } catch (e) {
+      console.log(e);
+    }
   }
   Bun.write("./out/boards.json", JSON.stringify(boardStore, null, 2));
   Bun.write("./out/races.json", JSON.stringify(raceStore, null, 2));
   Bun.write("./out/entries.json", JSON.stringify(entryStore, null, 2));
   Bun.write("./out/lastUpdated.json", JSON.stringify(new Date().toISOString()));
+  Bun.write("./out/currentVersion.json", JSON.stringify(CURRENT_VERSION));
 };
 
 f();

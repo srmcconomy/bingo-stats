@@ -11,6 +11,7 @@ export const processPlayers = ({
   entries: Dictionary<Entry>;
   filters: {
     version?: string;
+    gameMode?: string;
   };
 }) => {
   const map = new Map<
@@ -22,6 +23,9 @@ export const processPlayers = ({
     }
   >();
   for (const [id, race] of Object.entries(races)) {
+    if (filters.gameMode && race.gameMode !== filters.gameMode) {
+      continue;
+    }
     const board = boards[race.board];
     if (filters.version && board.version !== filters.version) {
       continue;

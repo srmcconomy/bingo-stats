@@ -9,6 +9,7 @@ export const processBoards = ({
   races: Dictionary<Race>;
   filters: {
     version?: string;
+    gameMode?: string;
   };
 }) => {
   let totalBoards = 0;
@@ -19,6 +20,9 @@ export const processBoards = ({
     }
   >();
   for (const race of Object.values(races)) {
+    if (filters.gameMode && race.gameMode !== filters.gameMode) {
+      continue;
+    }
     const board = boards[race.board];
     if (filters.version && board.version !== filters.version) {
       continue;

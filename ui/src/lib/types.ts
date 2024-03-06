@@ -7,6 +7,7 @@ export type Race = {
   timestamp: string;
   entrants: string[];
   board: string;
+  gameMode: string;
 };
 
 export type Entry = {

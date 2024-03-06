@@ -8,6 +8,7 @@ export type Race = {
   timestamp: string;
   entrants: string[];
   board: string;
+  gameMode: "bingo" | "anti-bingo";
 };
 export type Entry = {
   entrant: string;

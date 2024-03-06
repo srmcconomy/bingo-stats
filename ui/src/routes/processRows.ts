@@ -14,6 +14,7 @@ export const processRows = ({
   entries: Dictionary<Entry>;
   filters: {
     version?: string;
+    gameMode?: string;
     racer?: string;
     useMedian?: boolean;
   };
@@ -28,6 +29,9 @@ export const processRows = ({
     }
   >();
   for (const [id, race] of Object.entries(races)) {
+    if (filters.gameMode && race.gameMode !== filters.gameMode) {
+      continue;
+    }
     const board = boards[race.board];
     if (filters.version && board.version !== filters.version) {
       continue;
