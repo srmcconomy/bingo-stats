@@ -12,6 +12,7 @@ export const processPlayers = ({
   filters: {
     version?: string;
     gameMode?: string;
+    raceIDs?: Set<string>;
   };
 }) => {
   const map = new Map<
@@ -24,6 +25,9 @@ export const processPlayers = ({
   >();
   for (const [id, race] of Object.entries(races)) {
     if (filters.gameMode && race.gameMode !== filters.gameMode) {
+      continue;
+    }
+    if (filters.raceIDs && !filters.raceIDs.has(id.split("/")[2])) {
       continue;
     }
     const board = boards[race.board];

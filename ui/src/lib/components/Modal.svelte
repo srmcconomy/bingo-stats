@@ -1,23 +1,29 @@
 <script lang="ts">
   import { fade, fly } from "svelte/transition";
-  import { createEventDispatcher } from "svelte";
+  import { type Snippet } from "svelte";
   import { quadInOut } from "svelte/easing";
 
-  const dispatch = createEventDispatcher<{ close: void }>();
+  const {
+    onclose,
+    children,
+  }: {
+    onclose: () => void;
+    children: Snippet;
+  } = $props();
 </script>
 
 <div class="container">
   <button
     class="backdrop"
     transition:fade={{ duration: 200, easing: quadInOut }}
-    on:click={() => dispatch("close")}
+    onclick={() => onclose()}
   />
   <div
     class="modal"
     transition:fly={{ duration: 200, easing: quadInOut, y: -50 }}
   >
-    <slot />
-    <button class="close" on:click={() => dispatch("close")}>&times;</button>
+    {@render children?.()}
+    <button class="close" onclick={() => onclose()}>&times;</button>
   </div>
 </div>
 

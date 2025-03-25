@@ -1,15 +1,24 @@
 <script lang="ts" generics="T">
   import BaseSelect from "./BaseSelect.svelte";
-  import { createEventDispatcher } from "svelte";
+  import Button from "./Button.svelte";
 
-  export let label: string;
-  export let value: T;
-  export let options: T[];
-  export let getValue: (option: T) => string;
-  export let getLabel: (option: T) => string;
+  const {
+    label,
+    value,
+    options,
+    getValue,
+    getLabel,
+    onchange,
+  }: {
+    label: string;
+    value: T;
+    options: T[];
+    getValue: (option: T) => string;
+    getLabel: (option: T) => string;
+    onchange: (value: T) => void;
+  } = $props();
 
-  let isOpen = false;
-  const dispatch = createEventDispatcher<{ change: T }>();
+  let isOpen = $state(false);
 </script>
 
 <BaseSelect
@@ -19,27 +28,15 @@
   {options}
   {getLabel}
   {getValue}
-  on:change={(e) => {
+  onchange={(val) => {
     isOpen = false;
-    dispatch("change", e.detail);
+    onchange(val);
   }}
-  on:clickOutside={() => {
+  onclickoutside={() => {
     isOpen = false;
   }}
 >
-  <button class="toggle" on:click={() => (isOpen = !isOpen)}>
+  <Button onclick={() => (isOpen = !isOpen)}>
     {getLabel(value)}
-  </button>
+  </Button>
 </BaseSelect>
-
-<style lang="scss">
-  .toggle {
-    background: #333333;
-    border: 0;
-    color: inherit;
-    height: 40px;
-    padding: 0 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-</style>

@@ -1,5 +1,9 @@
 <script lang="ts">
-  export let lastUpdated: Date;
+  const {
+    lastUpdated,
+  }: {
+    lastUpdated: Date;
+  } = $props();
 </script>
 
 <header>

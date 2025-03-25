@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-
-  export let label: string;
-  export let checked: boolean;
-  const dispatchEvent = createEventDispatcher<{ change: boolean }>();
+  const {
+    label,
+    checked,
+    onchange,
+  }: {
+    label: string;
+    checked: boolean;
+    onchange: (value: boolean) => void;
+  } = $props();
 </script>
 
 <label>
-  <input
-    type="checkbox"
-    {checked}
-    on:change={() => dispatchEvent("change", !checked)}
-  />
-  <div />
+  <input type="checkbox" {checked} onchange={() => onchange(!checked)} />
+  <div></div>
   <span>{label}</span>
 </label>
 
@@ -39,7 +39,6 @@
     gap: 4px;
     cursor: pointer;
     align-items: center;
-    margin-top: 20px;
   }
   span {
     font-size: 14px;

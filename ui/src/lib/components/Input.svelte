@@ -1,18 +1,26 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import type { HTMLInputAttributes } from "svelte/elements";
   import Label from "./Label.svelte";
 
-  export let value: string;
-  export let label: string;
-  export let placeholder: string;
-  const dispatch = createEventDispatcher<{ change: string }>();
+  const {
+    label,
+    onchange,
+    invertColours,
+    ...rest
+  }: {
+    label: string;
+    onchange: (value: string) => void;
+    invertColours?: boolean;
+  } & Omit<HTMLInputAttributes, "onchange"> = $props();
 </script>
 
 <Label {label}>
   <input
-    {value}
-    on:change={(e) => dispatch("change", e.currentTarget.value)}
-    {placeholder}
+    class={{
+      invert: invertColours,
+    }}
+    onchange={(e) => onchange(e.currentTarget.value)}
+    {...rest}
   />
 </Label>
 
@@ -25,5 +33,9 @@
     padding: 0 16px;
     border-radius: 4px;
     outline: none;
+
+    &.invert {
+      background: #222222;
+    }
   }
 </style>

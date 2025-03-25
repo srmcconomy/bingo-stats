@@ -1,21 +1,21 @@
 <script lang="ts" generics="T">
   import Modal from "$lib/components/Modal.svelte";
 
-  export let title: string;
-  export let data: T[];
-  export let columns: {
-    header: string;
-    render: (row: T) => string;
-    fill?: boolean;
-  }[];
+  const {
+    title,
+    data,
+    columns,
+  }: {
+    title: string;
+    data: T[];
+    columns: {
+      header: string;
+      render: (row: T) => string;
+      fill?: boolean;
+    }[];
+  } = $props();
 
-  let isModalOpen = false;
-  let dialog: HTMLDialogElement;
-  $: if (isModalOpen) {
-    dialog?.showModal();
-  } else {
-    dialog?.close();
-  }
+  let isModalOpen = $state(false);
 </script>
 
 <div class="container">
@@ -40,13 +40,13 @@
       </div>
     {/each}
   </div>
-  <button on:click={() => (isModalOpen = true)}
+  <button onclick={() => (isModalOpen = true)}
     >See all {data.length} rows</button
   >
 </div>
 
 {#if isModalOpen}
-  <Modal on:close={() => (isModalOpen = false)}>
+  <Modal onclose={() => (isModalOpen = false)}>
     <div class="title">{title}</div>
     <div
       class="grid modal"

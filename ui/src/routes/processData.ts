@@ -32,6 +32,8 @@ export const processData = ({
   const racer = searchParams.get("racer") ?? undefined;
   const minSampleSize = searchParams.get("minSampleSize") ?? undefined;
   const useMedian = searchParams.get("useMedian") === "true" ? true : false;
+  const raceIDsParam = searchParams.getAll("raceID");
+  const raceIDs = raceIDsParam.length > 0 ? new Set(raceIDsParam) : undefined;
 
   const allVersions = [...new Set(Object.values(boards).map((b) => b.version))];
   const allRacers = [...new Set(Object.values(entries).map((b) => b.entrant))];
@@ -46,6 +48,7 @@ export const processData = ({
       gameMode,
       racer,
       useMedian,
+      raceIDs,
     },
   });
 
@@ -55,6 +58,7 @@ export const processData = ({
     filters: {
       version,
       gameMode,
+      raceIDs,
     },
   });
 
@@ -67,6 +71,7 @@ export const processData = ({
       gameMode,
       racer,
       useMedian,
+      raceIDs,
     },
   });
 
@@ -77,6 +82,7 @@ export const processData = ({
     filters: {
       version,
       gameMode,
+      raceIDs,
     },
   });
 
@@ -89,6 +95,7 @@ export const processData = ({
       gameMode,
       racer,
       useMedian,
+      raceIDs,
     },
   });
 
@@ -195,5 +202,6 @@ export const processData = ({
     allRacers,
     lastUpdated: new Date(lastUpdated),
     useMedian,
+    raceIDs,
   };
 };

@@ -18,6 +18,7 @@ export const processEntries = ({
     gameMode?: string;
     racer?: string;
     useMedian?: boolean;
+    raceIDs?: Set<string>;
   };
 }) => {
   const goalEntryData = new Map<
@@ -33,10 +34,14 @@ export const processEntries = ({
     if (filters.gameMode && race.gameMode !== filters.gameMode) {
       continue;
     }
+    if (filters.raceIDs && !filters.raceIDs.has(id.split("/")[2])) {
+      continue;
+    }
     const board = boards[race.board];
     if (filters.version && board.version !== filters.version) {
       continue;
     }
+
     for (const entrant of race.entrants) {
       if (filters.racer && filters.racer !== entrant) {
         continue;

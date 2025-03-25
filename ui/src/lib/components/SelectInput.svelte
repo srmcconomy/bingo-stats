@@ -1,17 +1,25 @@
 <script lang="ts" generics="T">
   import BaseSelect from "./BaseSelect.svelte";
-  import { createEventDispatcher } from "svelte";
 
-  export let label: string;
-  export let value: T;
-  export let options: T[];
-  export let getValue: (option: T) => string;
-  export let getLabel: (option: T) => string;
+  const {
+    label,
+    value,
+    options,
+    getValue,
+    getLabel,
+    onchange,
+  }: {
+    label: string;
+    value: T;
+    options: T[];
+    getValue: (option: T) => string;
+    getLabel: (option: T) => string;
+    onchange: (value: T) => void;
+  } = $props();
 
-  let search = "";
-  let isOpen = false;
+  let search = $state("");
+  let isOpen = $state(false);
   let input: HTMLInputElement;
-  const dispatch = createEventDispatcher<{ change: T }>();
 </script>
 
 <BaseSelect
@@ -23,13 +31,13 @@
   )}
   {getLabel}
   {getValue}
-  on:change={(e) => {
+  onchange={(val) => {
     isOpen = false;
     search = "";
     input.blur();
-    dispatch("change", e.detail);
+    onchange(val);
   }}
-  on:clickOutside={() => {
+  onclickoutside={() => {
     isOpen = false;
     input.blur();
   }}
@@ -37,7 +45,7 @@
   <input
     placeholder={getLabel(value)}
     bind:this={input}
-    on:focus={() => (isOpen = true)}
+    onfocus={() => (isOpen = true)}
     bind:value={search}
   />
 </BaseSelect>

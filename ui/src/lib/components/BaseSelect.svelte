@@ -2,34 +2,44 @@
   import { quadInOut } from "svelte/easing";
   import { fly } from "svelte/transition";
 
-  import { createEventDispatcher } from "svelte";
+  import { type Snippet } from "svelte";
   import Label from "./Label.svelte";
 
-  export let label: string;
-  export let isOpen: boolean;
-  export let value: T;
-  export let options: T[];
-  export let getValue: (option: T) => string;
-  export let getLabel: (option: T) => string;
+  const {
+    label,
+    isOpen,
+    value,
+    options,
+    getValue,
+    getLabel,
+    onchange,
+    onclickoutside,
+    children,
+  }: {
+    label: string;
+    isOpen: boolean;
+    value: T;
+    options: T[];
+    getValue: (option: T) => string;
+    getLabel: (option: T) => string;
+    onchange: (value: T) => void;
+    onclickoutside: () => void;
+    children: Snippet;
+  } = $props();
 
   let wrapper: HTMLDivElement;
 
   const handleClickOutside = (e: MouseEvent) => {
     if (wrapper && !wrapper.contains(e.target as Node)) {
-      dispatch("clickOutside");
+      onclickoutside();
     }
   };
-
-  const dispatch = createEventDispatcher<{
-    change: T;
-    clickOutside: null;
-  }>();
 </script>
 
-<svelte:document on:click={handleClickOutside} />
+<svelte:document onclick={handleClickOutside} />
 <Label {label}>
   <div class="relative-wrapper" bind:this={wrapper}>
-    <slot />
+    {@render children?.()}
     {#if isOpen}
       <div
         class="dropdown"
@@ -42,8 +52,8 @@
         {#each options as option}
           <button
             class:selected={getValue(option) === getValue(value)}
-            on:click={() => {
-              dispatch("change", option);
+            onclick={() => {
+              onchange(option);
             }}
           >
             {getLabel(option)}
@@ -79,11 +89,12 @@
       border: 0;
       background: unset;
       padding: 8px 16px;
+      text-align: unset;
+      cursor: pointer;
+
       @media (max-width: 600px) {
         padding: 16px;
       }
-      text-align: unset;
-      cursor: pointer;
 
       &.selected {
         background: #444444;

@@ -12,15 +12,16 @@
   import { loadData } from "./loadData";
   import Checkbox from "$lib/components/Checkbox.svelte";
   import { fade } from "svelte/transition";
+  import RaceFilter from "./RaceFilter.svelte";
 
-  let data: ReturnType<typeof processData> | null = null;
-  let searchParams: URLSearchParams | null = null;
+  let data = $state<ReturnType<typeof processData> | null>(null);
+  let searchParams = $state<URLSearchParams | null>(null);
 
   onMount(() => {
     searchParams = new URLSearchParams(window.location.search);
   });
 
-  $: {
+  $effect(() => {
     if (searchParams) {
       loadData().then((d) => {
         data = processData({
@@ -29,7 +30,7 @@
         });
       });
     }
-  }
+  });
 
   const updateQueryParams = (key: string, value: string | undefined) => {
     const url = new URL(window.location.href);
@@ -37,6 +38,15 @@
       url.searchParams.set(key, value);
     } else {
       url.searchParams.delete(key);
+    }
+    searchParams = url.searchParams;
+    goto(url);
+  };
+  const updateQueryParamsArray = (key: string, value: string[]) => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete(key);
+    for (const val of value) {
+      url.searchParams.append(key, val);
     }
     searchParams = url.searchParams;
     goto(url);
@@ -75,7 +85,7 @@
         <Select
           label="Version"
           value={data.version}
-          on:change={(e) => updateQueryParams("version", e.detail)}
+          onchange={(v) => updateQueryParams("version", v)}
           options={[undefined, ...data.allVersions]}
           getLabel={(v) => v ?? "All versions"}
           getValue={(v) => v ?? "all"}
@@ -83,7 +93,7 @@
         <Select
           label="Game Mode"
           value={data.gameMode}
-          on:change={(e) => updateQueryParams("gameMode", e.detail)}
+          onchange={(v) => updateQueryParams("gameMode", v)}
           options={[undefined, "bingo", "anti-bingo"]}
           getLabel={(v) => v ?? "All"}
           getValue={(v) => v ?? "all"}
@@ -91,7 +101,7 @@
         <SelectInput
           label="Racer"
           value={data.racer}
-          on:change={(e) => updateQueryParams("racer", e.detail)}
+          onchange={(v) => updateQueryParams("racer", v)}
           options={[undefined, ...data.allRacers]}
           getLabel={(v) => v ?? "All racers"}
           getValue={(v) => v ?? "all"}
@@ -100,13 +110,19 @@
           label="Min. sample size"
           placeholder="0"
           value={data.minSampleSize ?? ""}
-          on:change={(e) => updateQueryParams("minSampleSize", e.detail)}
+          onchange={(v) => updateQueryParams("minSampleSize", v)}
         />
-        <Checkbox
-          label="Use median"
-          checked={data.useMedian}
-          on:change={(e) =>
-            updateQueryParams("useMedian", e.detail ? "true" : undefined)}
+        <div class="checkbox-wrapper">
+          <Checkbox
+            label="Use median"
+            checked={data.useMedian}
+            onchange={(v) =>
+              updateQueryParams("useMedian", v ? "true" : undefined)}
+          />
+        </div>
+        <RaceFilter
+          raceIDs={data.raceIDs}
+          onchange={(v) => updateQueryParamsArray("raceID", [...v])}
         />
       </div>
       <div class="data">
@@ -508,10 +524,12 @@
   }
   .filters {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
+    flex-wrap: wrap;
     gap: 32px;
     @media (max-width: 800px) {
       flex-direction: column;
+      align-items: flex-start;
       gap: 8px;
     }
   }
@@ -519,14 +537,19 @@
     display: flex;
     flex-wrap: wrap;
     gap: 32px;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
     @media (min-width: 1032px) {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 32px;
     }
-    flex-wrap: nowrap;
-    flex-direction: column;
-    gap: 16px;
-    align-items: stretch;
+  }
+  .checkbox-wrapper {
+    height: 40px;
+    display: flex;
+    align-items: center;
   }
 </style>

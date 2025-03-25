@@ -33,6 +33,7 @@ export const processGoalCombinations = ({
     gameMode?: string;
     racer?: string;
     useMedian?: boolean;
+    raceIDs?: Set<string>;
   };
 }) => {
   const goalEntryData = new Map<
@@ -47,6 +48,9 @@ export const processGoalCombinations = ({
   >();
   for (const [id, race] of Object.entries(races)) {
     if (filters.gameMode && race.gameMode !== filters.gameMode) {
+      continue;
+    }
+    if (filters.raceIDs && !filters.raceIDs.has(id.split("/")[2])) {
       continue;
     }
     const board = boards[race.board];

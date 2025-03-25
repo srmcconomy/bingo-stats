@@ -10,6 +10,7 @@ export const processBoards = ({
   filters: {
     version?: string;
     gameMode?: string;
+    raceIDs?: Set<string>;
   };
 }) => {
   let totalBoards = 0;
@@ -19,7 +20,10 @@ export const processBoards = ({
       appearances: number;
     }
   >();
-  for (const race of Object.values(races)) {
+  for (const [id, race] of Object.entries(races)) {
+    if (filters.raceIDs && !filters.raceIDs.has(id.split("/")[2])) {
+      continue;
+    }
     if (filters.gameMode && race.gameMode !== filters.gameMode) {
       continue;
     }
