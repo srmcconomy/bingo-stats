@@ -3,22 +3,42 @@ import { CURRENT_VERSION } from "./currentVersion";
 import { fetchExistingData } from "./fetchExistingData";
 import { generateBoard } from "./generateBoard";
 
+const matchers: {
+  regex: RegExp;
+  getRow: (match: RegExpExecArray) => string;
+}[] = [
+  {
+    regex: /\br(?:ow)?.?([1-5])\b/i,
+    getRow: (match) => `row${match[1]}`,
+  },
+  {
+    regex: /\bc(?:ol)?(?:umn)?.?([1-5])\b/i,
+    getRow: (match) => `col${match[1]}`,
+  },
+  {
+    regex: /\bbl.?tr\b/i,
+    getRow: () => "bltr",
+  },
+  {
+    regex: /\btl.?br\b/i,
+    getRow: () => "tlbr",
+  },
+];
+
 const parseRow = (comment: string) => {
-  const rowMatch = /\br(?:ow)?.?([1-5])\b/i.exec(comment);
-  if (rowMatch) {
-    return `row${rowMatch[1]}`;
-  }
-  const colMatch = /\bc(?:ol)?(?:umn)?.?([1-5])\b/i.exec(comment);
-  if (colMatch) {
-    return `col${colMatch[1]}`;
-  }
-  if (/\bbl.?tr\b/i.exec(comment)) {
-    return "bltr";
-  }
-  if (/\btl.?br\b/i.exec(comment)) {
-    return "tlbr";
-  }
-  return null;
+  let matches = matchers
+    .map((matcher) => {
+      const match = matcher.regex.exec(comment);
+      return match
+        ? {
+            index: match.index,
+            row: matcher.getRow(match),
+          }
+        : null;
+    })
+    .filter((m) => !!m);
+  matches.sort((a, b) => a.index - b.index);
+  return matches[0]?.row ?? null;
 };
 
 const f = async () => {
